@@ -1,0 +1,26 @@
+.headerNavLink{
+    color: var(--black);
+    font-size: 16px;
+    line-height: 130%;
+    transition: color 0.4s;
+
+    &:hover{
+        color: var(--dark-pink);
+    }
+
+    &:not(:first-child){
+        margin-left: 40px;
+    }
+
+    @media (max-width: 900px){
+        &:not(:first-child){
+            margin-left: 20px;
+        }
+    }
+}
+
+@media (max-width: 740px){
+    .headerNav{
+        display: none;
+    }
+}

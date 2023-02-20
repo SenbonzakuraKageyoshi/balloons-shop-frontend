@@ -1,0 +1,40 @@
+.catalogLink{
+    width: 154px;
+    height: 49px;
+    background: var(--light-pink);
+    border-radius: 5px;
+    color: var(--white);
+    font-size: 16px;
+    line-height: 20px;
+    margin-left: 40px;
+    transition: background 0.4s;
+
+    & img{
+        display: none;
+    }
+
+    &:hover{
+        background: var(--violet);
+    }
+
+    @media (max-width: 900px){
+        &{
+            margin-left: 20px;
+        }
+    }
+
+    @media (max-width: 440px){
+        & span{
+            display: none;
+        }
+
+        & img{
+            display: block;
+        }
+
+        &{
+            width: 40px;
+            height: 40px;
+        }
+    }
+}

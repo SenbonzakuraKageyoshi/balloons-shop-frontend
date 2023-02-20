@@ -1,0 +1,17 @@
+.listTitle{
+    font-family: var(--bold);
+    font-size: 40px;
+    line-height: 40px;
+    letter-spacing: 0.03em;
+    color: var(--black);
+
+    @media(max-width: 740px){
+        font-size: 30px;
+        line-height: 30px;
+    }
+
+    @media(max-width: 440px){
+        font-size: 20px;
+        line-height: 20px;
+    }
+}

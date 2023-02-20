@@ -1,0 +1,47 @@
+.categoryItem{
+    text-align: center;
+    width: 230px;
+    margin-left: 10px;
+    margin-top: 20px;
+
+    &:hover .categoryItemName{
+        color: var(--violet);
+    }
+}
+
+.categoryItemName{
+    margin-top: 15px;
+    font-size: 16px;
+    line-height: 130%;
+    letter-spacing: 0.03em;
+    color: var(--black);
+    transition: color 0.4s;
+}
+
+@media(max-width: 740px){
+    .categoryItem{
+        width: 200px;
+
+        & img{
+            width: 200px;
+            height: 200px;
+        }
+    }
+
+    .categoryItemName{
+        font-size: 14px;
+        line-height: 14px;
+        margin-top: 10px;
+    }
+}
+
+@media(max-width: 440px){
+    .categoryItem{
+        width: 160px;
+
+        & img{
+            width: 160px;
+            height: 160px;
+        }
+    }
+}
