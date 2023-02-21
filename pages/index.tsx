@@ -1,11 +1,11 @@
 import List from "@/components/List/List";
 import CategoryItem from "@/components/CategoryItem/CategoryItem";
-import ListTitle from "@/components/ListTitle/ListTitle";
+import Title from "@/components/Title/Title";
 
 const Home = () => {
   return (
     <>
-    <ListTitle title="Лидеры продаж"/>
+    <Title title="Лидеры продаж"/>
     <List>
     <CategoryItem />
     <CategoryItem />

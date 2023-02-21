@@ -1,5 +1,5 @@
 import React from 'react';
-import ErrorMessage from '../ErrorMessage/ErrorMessage';
+import Message from '../Message/Message';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { RegisterFormValues, LoginFormValues } from '@/types/authFormValues';
@@ -37,18 +37,90 @@ const loginFields =
   {id: 3, name: 'userPassword', label: 'Ваш пароль'},
 ] as const;
 
+enum statusCodes {
+  'Request failed with status code 200' = 'Такой пользователь уже существует',
+  'Request failed with status code 400' = 'Такой пользователь уже существует',
+  'Request failed with status code 404' = 'Неверный логин, телефон, или пароль',
+  'Request failed with status code 500' = 'Ошибка сервера',
+}
+
 const AuthForm = () => {
 
   const [isLogin, setIsLogin] = React.useState<boolean>(false);
+  const [isError, setIsError] = React.useState<null | boolean>(null);
+  const [message, setMessage] = React.useState<null | string>(null);
 
   const dispatch = useAppDispatch();
 
   const onRegisterHandler = (values: RegisterFormValues) => {
+    setMessage(null);
+    setIsError(null);
+
     dispatch(fetchRegister(values))
+    .then((data) => {
+      if("error" in data){
+        setIsError(true);
+
+        data.error.message
+        ?
+        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        :
+        setMessage('Неизвестная ошибка');
+      }else{
+        console.log('pfpfppfpfpf')
+        setMessage('Вы успешно авторизованы!');
+        setIsError(false);
+      } 
+    })
+    .catch((data) => {
+      if("error" in data){
+        setIsError(true);
+
+        data.error.message
+        ? 
+        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        :
+        setMessage('Неизвестная ошибка');
+      }else{
+        setMessage('Неизвестная ошибка');
+        setIsError(true);
+      }
+    })
   };
 
   const onLoginHandler = (values: LoginFormValues) => {
+    setMessage(null);
+    setIsError(null);
+
     dispatch(fetchLogin(values))
+    .then((data) => {
+      if("error" in data){
+        setIsError(true);
+
+        data.error.message
+        ? 
+        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        :
+        setMessage('Неизвестная ошибка')
+      }else{
+        setMessage('Вы успешно авторизованы!');
+        setIsError(false);
+      } 
+    })
+    .catch((data) => {
+      if("error" in data){
+        setIsError(true);
+
+        data.error.message
+        ? 
+        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        :
+        setMessage('Неизвестная ошибка');
+      }else{
+        setMessage('Неизвестная ошибка');
+        setIsError(true);
+      }
+    })
   };
 
   const registerSchema = Yup.object().shape({
@@ -97,7 +169,7 @@ const AuthForm = () => {
         <>
         <form action="POST" className="form" onSubmit={handleSubmit}>
           {registerFields.map((el) => (
-              <div key={el.id}>
+              <div key={el.id} className={styles.formItem}>
                 <label htmlFor={el.name} className={styles.formItemLabel}>{el.label}:</label>
                 <input 
                   type="text"
@@ -107,12 +179,13 @@ const AuthForm = () => {
                   onBlur={handleBlur}
                   value={values[`${el.name}`]}
                 />
-                {touched[`${el.name}`] && errors[`${el.name}`] && <ErrorMessage message={errors[`${el.name}`]!}/>}
+                {touched[`${el.name}`] && errors[`${el.name}`] && <Message isError={true} message={errors[`${el.name}`]!}/>}
               </div>
           ))}
           <button type="submit" className={styles.formButton} disabled={isValid && dirty && !Object.keys(errors).length ? false : true}>Зарегистрироваться</button>
+          {message ? <Message isError={isError!} message={message} /> : null}
         </form>
-        <div className={styles.formNotify}>Уже зарегистрированы? <span onClick={() => {resetForm(); setIsLogin(true)}}>Войдите в аккаунт!</span></div>
+        <div className={styles.formNotify}>Уже зарегистрированы? <span onClick={() => {resetForm(); setIsError(null); setMessage(null); setIsLogin(true)}}>Войдите в аккаунт!</span></div>
         </>
        )}
      </Formik>
@@ -129,7 +202,7 @@ const AuthForm = () => {
         <>
         <form action="POST" className="form" onSubmit={handleSubmit}>
           {loginFields.map((el) => (
-              <div key={el.id}>
+              <div key={el.id} className={styles.formItem}>
                 <label htmlFor={el.name} className={styles.formItemLabel}>{el.label}:</label>
                 <input 
                   type="text"
@@ -139,12 +212,13 @@ const AuthForm = () => {
                   onBlur={handleBlur}
                   value={values[`${el.name}`]}
                 />
-                {touched[`${el.name}`] && errors[`${el.name}`] && <ErrorMessage message={errors[`${el.name}`]!}/>}
+                {touched[`${el.name}`] && errors[`${el.name}`] && <Message isError={true} message={errors[`${el.name}`]!}/>}
               </div>
           ))}
           <button type="submit" className={styles.formButton} disabled={isValid && dirty && !Object.keys(errors).length ? false : true}>Войти</button>
+          {message ? <Message isError={isError!} message={message} /> : null}
         </form>
-        <div className={styles.formNotify}>Еще не зарегистрированы? <span onClick={() => {resetForm(); setIsLogin(false)}}>Создайте аккаунт!</span></div>
+        <div className={styles.formNotify}>Еще не зарегистрированы? <span onClick={() => {resetForm(); setIsError(null); setMessage(null); setIsLogin(false)}}>Создайте аккаунт!</span></div>
         </>
        )}
      </Formik>

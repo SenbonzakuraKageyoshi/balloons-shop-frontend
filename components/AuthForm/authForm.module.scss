@@ -43,6 +43,10 @@
     }
 }
 
+.formItem:not(:first-child){
+    margin-top: 10px;
+}
+
 .formNotify{
     font-size: 12px;
     line-height: 14px;

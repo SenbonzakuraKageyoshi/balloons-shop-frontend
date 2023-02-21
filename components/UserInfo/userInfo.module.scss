@@ -1,0 +1,19 @@
+.userInfoItemLabel{
+    font-size: 14px;
+    line-height: 21px;
+    color: var(--medium-dark-gray);
+}
+
+.userInfoItemValue{
+    width: 300px;
+    height: 50px;
+    background: #FFF3FF;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+.userInfoItem:not(:first-child){
+    margin-top: 15px;
+}
