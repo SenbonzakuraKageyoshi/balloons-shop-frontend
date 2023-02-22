@@ -1,3 +1,5 @@
+import React from 'react';
+import ActionResultMessage from '../ActionResultMessage/ActionResultMessage';
 import AuthForm from '../AuthForm/AuthForm';
 import Image from 'next/image';
 import close from '@/public/images/svg/close-icon.svg';
@@ -10,6 +12,20 @@ interface AuthModal {
 
 const AuthModal = ({ modalIsOpened, setModalIsOpened }: AuthModal) => {
 
+  const [successMessage, setSuccessMessage] = React.useState<null | string>(null);
+
+  React.useEffect(() => {
+    if(successMessage){
+        const timeout = setTimeout(() => {
+          setSuccessMessage(null)
+        }, 3000)
+
+        return () => {
+          clearTimeout(timeout)
+        }
+    }
+}, [successMessage])
+
   const closeModal = () => {
     const form = document.querySelector<HTMLFormElement>('.form');
 
@@ -21,6 +37,8 @@ const AuthModal = ({ modalIsOpened, setModalIsOpened }: AuthModal) => {
   };
 
   return (
+    <>
+    <ActionResultMessage message={successMessage} isError={false} />
     <div className={modalIsOpened ? styles.modalWrapperActive : styles.modalWrapper}>
         <div className={styles.modalContent}>
             <header className={styles.modalHeader}>
@@ -29,9 +47,10 @@ const AuthModal = ({ modalIsOpened, setModalIsOpened }: AuthModal) => {
                   <Image src={close} width={40} height={40} alt="Закрыть"/>
                 </button>
             </header>
-            <AuthForm />
+            <AuthForm setSuccessMessage={setSuccessMessage}/>
         </div>
     </div>
+    </>
   )
 }
 

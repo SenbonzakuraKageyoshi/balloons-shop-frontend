@@ -1,0 +1,38 @@
+.actionResultMessage{
+    position: fixed;
+    bottom: -50px;
+    left: 10px;
+    transition: 0.4s;
+}
+
+.actionResultMessageSuccessActive{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: #72fa79;
+    width: 280px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 1000;
+    transition: 0.4s;
+}
+
+.actionResultMessageErrorActive{
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background: rgb(250, 15, 15);
+    width: 250px;
+    height: 40px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    z-index: 1000;
+    transition: 0.4s;
+}

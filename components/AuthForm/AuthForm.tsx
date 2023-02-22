@@ -1,11 +1,15 @@
 import React from 'react';
-import Message from '../Message/Message';
+import ErrorMessage from '../ErrorMessage/ErrorMessage';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { RegisterFormValues, LoginFormValues } from '@/types/authFormValues';
 import { useAppDispatch } from '@/redux/redux-hooks';
 import { fetchRegister, fetchLogin }from '@/redux/userSlice/userSlice';
 import styles from './authForm.module.scss';
+
+interface AuthForm {
+  setSuccessMessage: React.Dispatch<React.SetStateAction<string | null>>
+}
 
 const registerFormValues: RegisterFormValues = {
   userFirstName: '',
@@ -44,81 +48,65 @@ enum statusCodes {
   'Request failed with status code 500' = 'Ошибка сервера',
 }
 
-const AuthForm = () => {
+const AuthForm = ({ setSuccessMessage }: AuthForm) => {
 
   const [isLogin, setIsLogin] = React.useState<boolean>(false);
-  const [isError, setIsError] = React.useState<null | boolean>(null);
-  const [message, setMessage] = React.useState<null | string>(null);
+  const [errorMessage, setErrorMessage] = React.useState<null | string>(null);
 
   const dispatch = useAppDispatch();
 
   const onRegisterHandler = (values: RegisterFormValues) => {
-    setMessage(null);
-    setIsError(null);
+    setErrorMessage(null);
 
     dispatch(fetchRegister(values))
     .then((data) => {
       if("error" in data){
-        setIsError(true);
-
         data.error.message
         ?
-        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        setErrorMessage(statusCodes[data.error.message as keyof typeof statusCodes])
         :
-        setMessage('Неизвестная ошибка');
+        setErrorMessage('Неизвестная ошибка');
       }else{
-        console.log('pfpfppfpfpf')
-        setMessage('Вы успешно авторизованы!');
-        setIsError(false);
-      } 
+        setSuccessMessage('Вы успешно авторизованы!')
+      }
     })
     .catch((data) => {
       if("error" in data){
-        setIsError(true);
-
         data.error.message
         ? 
-        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        setErrorMessage(statusCodes[data.error.message as keyof typeof statusCodes])
         :
-        setMessage('Неизвестная ошибка');
+        setErrorMessage('Неизвестная ошибка');
       }else{
-        setMessage('Неизвестная ошибка');
-        setIsError(true);
+        setErrorMessage('Неизвестная ошибка');
       }
     })
   };
 
   const onLoginHandler = (values: LoginFormValues) => {
-    setMessage(null);
-    setIsError(null);
+    setErrorMessage(null);
 
     dispatch(fetchLogin(values))
     .then((data) => {
       if("error" in data){
-        setIsError(true);
-
         data.error.message
         ? 
-        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        setErrorMessage(statusCodes[data.error.message as keyof typeof statusCodes])
         :
-        setMessage('Неизвестная ошибка')
+        setErrorMessage('Неизвестная ошибка')
       }else{
-        setMessage('Вы успешно авторизованы!');
-        setIsError(false);
-      } 
+        setSuccessMessage('Вы успешно авторизованы!')
+      }
     })
     .catch((data) => {
       if("error" in data){
-        setIsError(true);
-
         data.error.message
         ? 
-        setMessage(statusCodes[data.error.message as keyof typeof statusCodes])
+        setErrorMessage(statusCodes[data.error.message as keyof typeof statusCodes])
         :
-        setMessage('Неизвестная ошибка');
+        setErrorMessage('Неизвестная ошибка');
       }else{
-        setMessage('Неизвестная ошибка');
-        setIsError(true);
+        setErrorMessage('Неизвестная ошибка');
       }
     })
   };
@@ -179,13 +167,13 @@ const AuthForm = () => {
                   onBlur={handleBlur}
                   value={values[`${el.name}`]}
                 />
-                {touched[`${el.name}`] && errors[`${el.name}`] && <Message isError={true} message={errors[`${el.name}`]!}/>}
+                {touched[`${el.name}`] && errors[`${el.name}`] && <ErrorMessage message={errors[`${el.name}`]!}/>}
               </div>
           ))}
           <button type="submit" className={styles.formButton} disabled={isValid && dirty && !Object.keys(errors).length ? false : true}>Зарегистрироваться</button>
-          {message ? <Message isError={isError!} message={message} /> : null}
+          {errorMessage ? <ErrorMessage message={errorMessage} /> : null}
         </form>
-        <div className={styles.formNotify}>Уже зарегистрированы? <span onClick={() => {resetForm(); setIsError(null); setMessage(null); setIsLogin(true)}}>Войдите в аккаунт!</span></div>
+        <div className={styles.formNotify}>Уже зарегистрированы? <span onClick={() => {resetForm(); setErrorMessage(null); setIsLogin(true)}}>Войдите в аккаунт!</span></div>
         </>
        )}
      </Formik>
@@ -212,13 +200,13 @@ const AuthForm = () => {
                   onBlur={handleBlur}
                   value={values[`${el.name}`]}
                 />
-                {touched[`${el.name}`] && errors[`${el.name}`] && <Message isError={true} message={errors[`${el.name}`]!}/>}
+                {touched[`${el.name}`] && errors[`${el.name}`] && <ErrorMessage message={errors[`${el.name}`]!}/>}
               </div>
           ))}
           <button type="submit" className={styles.formButton} disabled={isValid && dirty && !Object.keys(errors).length ? false : true}>Войти</button>
-          {message ? <Message isError={isError!} message={message} /> : null}
+          {errorMessage ? <ErrorMessage message={errorMessage} /> : null}
         </form>
-        <div className={styles.formNotify}>Еще не зарегистрированы? <span onClick={() => {resetForm(); setIsError(null); setMessage(null); setIsLogin(false)}}>Создайте аккаунт!</span></div>
+        <div className={styles.formNotify}>Еще не зарегистрированы? <span onClick={() => {resetForm(); setErrorMessage(null); setIsLogin(false)}}>Создайте аккаунт!</span></div>
         </>
        )}
      </Formik>
